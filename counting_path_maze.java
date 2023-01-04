@@ -10,7 +10,7 @@ public class counting_path_maze {
       { true, true, true },
       { true, true, true },
     };
-    int route[][] = { { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 } };
+    int route[][] = new int[board.length][board[0].length];
 
     pathRestrictionAlldirectionpathprint("", board, 0, 0, route, 1);
     // System.out.println(mazeretdiagonally("", 3, 3)); //diaagonallyreturn list
@@ -126,64 +126,106 @@ public class counting_path_maze {
   ) {
     if (row == maze.length - 1 && column == maze[0].length - 1) {
       System.out.println(p);
+      path[row][column] = step;
       for (int[] arr : path) {
         System.out.println(Arrays.toString(arr));
         System.out.println();
       }
-    } else {
-      path[row][column] = step;
-      if (!maze[row][column]) {
-        return;
+      maze[row][column] = false;
+      return;
+    }
+    if (!maze[row][column]) {
+      return;
+    }
+    maze[row][column] = false;
+    path[row][column] = step;
+    //set the cell false to indicate it has been visited for that recursion call
+
+    if (row < maze.length - 1) {
+      pathRestrictionAlldirectionpathprint(
+        p + "D",
+        maze,
+        row + 1,
+        column,
+        path,
+        step + 1
+      );
+    }
+    if (column < maze[0].length - 1) {
+      pathRestrictionAlldirectionpathprint(
+        p + "R",
+        maze,
+        row,
+        column + 1,
+        path,
+        step + 1
+      );
+    }
+    if (row > 0) {
+      pathRestrictionAlldirectionpathprint(
+        p + "U",
+        maze,
+        row - 1,
+        column,
+        path,
+        step + 1
+      );
+    }
+    //0 1 2
+    //1 * *
+    //2 * *
+    if (column > 0) {
+      pathRestrictionAlldirectionpathprint(
+        p + "L",
+        maze,
+        row,
+        column - 1,
+        path,
+        step + 1
+      );
+    }
+    //this is the line where the function gets removed so also restore all the changes
+
+    maze[row][column] = true;
+    path[row][column] = 0;
+  }
+
+  static void pathAlldirectionsCopy(
+    String p,
+    int row,
+    int column,
+    boolean[][] maze,
+    int[][] path,
+    int count
+  ) {
+    // count = 0;
+    if (row == maze.length - 1 && column == maze[0].length - 1) {
+      System.out.println(p);
+      path[row][column] = count;
+      for (int[] arr : path) {
+        System.out.println(Arrays.toString(arr));
       }
       maze[row][column] = false;
-      //set the cell false to indicate it has been visited for that recursion call
-
-      if (row < maze.length - 1) {
-        pathRestrictionAlldirectionpathprint(
-          p + "D",
-          maze,
-          row + 1,
-          column,
-          path,
-          step + 1
-        );
-      }
-      if (column < maze[0].length - 1) {
-        pathRestrictionAlldirectionpathprint(
-          p + "R",
-          maze,
-          row,
-          column + 1,
-          path,
-          step + 1
-        );
-      }
-      if (row > 0) {
-        pathRestrictionAlldirectionpathprint(
-          p + "U",
-          maze,
-          row - 1,
-          column,
-          path,
-          step + 1
-        );
-      }
-      //0 1 2
-      //1 * *
-      //2 * *
-      if (column > 0) {
-        pathRestrictionAlldirectionpathprint(
-          p + "U",
-          maze,
-          row,
-          column - 1,
-          path,
-          step + 1
-        );
-      }
-      //this is the line where the function gets removed so also restore all the changes
-      maze[row][column] = true;
-      path[row][column] = 0;
+      return;
     }
+    maze[row][column] = false;
+    if (!maze[row][column]) {
+      return;
+    }
+    if (column > maze[0].length - 1) {
+      pathAlldirectionsCopy(p + "R", row, column + 1, maze, path, count + 1);
+    }
+    if (row > maze.length - 1) {
+      pathAlldirectionsCopy(p + "D", row + 1, column, maze, path, count + 1);
+    }
+    if (row > 1) {
+      pathAlldirectionsCopy(p + "U", row - 1, column, maze, path, count + 1);
+    }
+    if (column > 1) {
+      pathAlldirectionsCopy(p + "L", row, column - 1, maze, path, count + 1);
+    }
+
+    maze[row][column] = true;
+    path[row][column] = 0;
   }
 }
