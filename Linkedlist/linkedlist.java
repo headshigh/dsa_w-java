@@ -76,10 +76,33 @@ public class linkedlist {
     return temp;
   }
 
+  //insert using recursion
+  public void insertRec(int value, int index) {
+    head = insertRec(value, index, head);
+  }
+
+  private Node insertRec(int val, int index, Node node) {
+    if (index == 0) { //base case,index ko value suru dekhi ghatdai gayera hamilai chiye jati vako cha
+      //hamilai tyo index ko node ko agadi naya node thapnu parne huncha jun node le tyehi node lai point gareko huncha
+      //create a new node parameter node has the value for current node
+      Node temp = new Node(val);
+      temp.next = node;
+      size++;
+      return temp;
+    }
+    node.next = insertRec(val, index - 1, node.next);
+    return node;
+  }
+
   public int deleteLast() {
+    if (size <= 1) {
+      return deletefirst();
+    }
     Node secondlast = get(size - 2); //index starts from zero
     Node last = secondlast.next;
     int temp = last.value;
+    secondlast.next = null;
+    return temp;
   }
 
   public void display() {
@@ -89,6 +112,31 @@ public class linkedlist {
       temp = temp.next;
     }
     System.out.println("end");
+  }
+
+  //same cha vane pointer lai agadi na badaune
+  public void remDuplicate() {
+    Node pointer = head;
+
+    while (pointer.next != null) {
+      Node temp = pointer.next;
+      if (temp.value == pointer.value) {
+        pointer.next = temp.next;
+      } else {
+        pointer = pointer.next;
+      }
+    }
+    // while (pointer != null) {
+    //   Node temp = pointer.next;
+    //   if (pointer.value == temp.value) {
+    //     if (temp.next == null) {
+    //       pointer.next=temp.next;
+    //     } else {
+    //       pointer.next = temp.next;
+    //       pointer = pointer.next;
+    //     }
+    //   }
+    //  }
   }
 
   private class Node {
